@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sliding panes demo</title>
+    <style>
+body { margin: 0; }
+label { display: block; }
+
+
+div {
+  max-width: 768px;
+  overflow: hidden;
+  margin: auto;
+  background-color: #ffeeff;
+}
+
+section {
+    display: flex;
+    justify-content: space-around;
+
+    width: 200%;
+    max-width: 200vw;
+
+    transform: translateX(calc(-0 * 100% / 9));
+
+    height: 80vh;
+    transition: transform 0.3s ease-in-out;
+}
+
+section > article {
+    flex: 0 0 auto;
+    width: 100vw;
+    max-width: 550px;
+
+    border-radius: 50px;
+}
+
+section > article:nth-child(odd) {
+    background: #123456;
+}
+section > article:nth-child(even) {
+    background: #995678;
+}
+    </style>
+
+    <script>
+function changeAmount(value) {
+    value = Number(value);
+
+    var container = document.querySelector('#pane-container');
+    var activeSelector = document.querySelector('#active-select');
+
+
+    container.style.transitionDuration = '0s';
+    var newHtml = (new Array(value + 1)).join('<article></article>');
+
+    container.innerHTML = newHtml;
+
+    container.style.width = value * 100 + '%';
+    container.style.maxWidth = value * 100 + 'vw';
+
+    changeActive(Math.min(Number(activeSelector.value), value));
+    activeSelector.max = value;
+
+    setTimeout(function () {
+      container.style.transitionDuration = '';
+    });
+}
+
+function changeActive(value) {
+  value = Number(value);
+
+  var container = document.querySelector('#pane-container');
+  var amountSelector = document.querySelector('#amount-select');
+  var activeSelector = document.querySelector('#active-select');
+
+  container.style.transform = `translateX(calc(-${value - 1} * 100% / ${Number(amountSelector.value)}))`;
+}
+
+    </script>
+</head>
+<body>
+
+    <label>
+      Amount of panes:
+      <input id="amount-select" type="range" min="1", max="10" onchange="changeAmount(this.value)" value="2">
+    </label>
+
+    <label>
+      Active pane:
+      <input id="active-select" type="range" min="1" max="2" onchange="changeActive(this.value)" value="1">
+    </label>
+
+
+    <div>
+        <section id="pane-container">
+            <article></article>
+            <article></article>
+        </section>
+    </div>
+
+
+</body>
+</html>
